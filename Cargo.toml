@@ -1,0 +1,75 @@
+[package]
+name = "bridge-guest"
+version = "0.1.0"
+edition = "2021"
+description = "Puts any rewrite-bridge provider's model into any game that hosts the passthrough link, drawn on the GPU with the host's camera and depth-tested against the host's geometry"
+license = "MIT OR Apache-2.0"
+# A local tool: it needs your own game installs to do anything
+publish = false
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+ctrlc = { version = "3", features = ["termination"] }
+rewrite-bridge = { version = "0.2.1", features = ["link"] }
+rewrite-bridge-bevy = "0.2.1"
+
+# The providers, by git (their current main). Each is a cargo feature, so a build can carry only the
+# games you own.
+wt-unpack = { git = "https://github.com/patodois/wt-unpack", features = ["bridge"], optional = true }
+wf-unpack = { git = "https://github.com/patodois/wf-unpack", features = ["bridge"], optional = true }
+hytale-unpack = { git = "https://github.com/patodois/hytale-unpack", optional = true }
+nocturne-unpack = { git = "https://github.com/patodois/nocturne-unpack", features = ["bridge"], optional = true }
+
+[dependencies.bevy]
+version = "0.20"
+default-features = false
+features = [
+    "std",
+    "async_executor",
+    "multi_threaded",
+    "bevy_asset",
+    "bevy_log",
+    "bevy_color",
+    "bevy_image",
+    "bevy_mesh",
+    "bevy_mikktspace",
+    "bevy_animation",
+    "bevy_curve",
+    "bevy_camera",
+    "bevy_light",
+    "bevy_render",
+    "bevy_pbr",
+    "bevy_core_pipeline",
+    "bevy_shader",
+    "bevy_window",
+    "bevy_winit",
+    "bevy_sprite",
+    "bevy_sprite_render",
+    "zstd_rust",
+    "tonemapping_luts",
+    "png",
+    "x11",
+    "wayland",
+]
+
+[features]
+default = ["wt", "wf", "hytale", "nocturne"]
+wt = ["dep:wt-unpack"]
+wf = ["dep:wf-unpack"]
+hytale = ["dep:hytale-unpack"]
+nocturne = ["dep:nocturne-unpack"]
+
+# Bevy and the game readers are far too slow without optimisations; keep our own code debuggable
+[profile.dev.package."*"]
+opt-level = 3
+debug = false
+
+[profile.dev]
+debug = "line-tables-only"
+
+# The providers' current main still pins rewrite-bridge at the git tag v0.1.0, which would put a second
+# copy of the model types in the build (and `Provider` of one copy is not `Provider` of the other).
+# Their requirement is only "any version from that repository", so the published 0.2.1 can stand in.
+[patch."https://github.com/patodois/rewrite-bridge"]
+rewrite-bridge = { version = "0.2.1" }
