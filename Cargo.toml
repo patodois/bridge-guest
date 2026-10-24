@@ -16,10 +16,10 @@ rewrite-bridge-bevy = "0.2.1"
 
 # The providers, by git (their current main). Each is a cargo feature, so a build can carry only the
 # games you own.
-wt-unpack = { git = "https://github.com/patodois/wt-unpack", features = ["bridge"], optional = true }
-wf-unpack = { git = "https://github.com/patodois/wf-unpack", features = ["bridge"], optional = true }
-hytale-unpack = { git = "https://github.com/patodois/hytale-unpack", optional = true }
-nocturne-unpack = { git = "https://github.com/patodois/nocturne-unpack", features = ["bridge"], optional = true }
+wt-unpack = { git = "https://github.com/patodois/wt-unpack", rev = "4915291663efa60aab97dd781b3fd507bc8de34a", features = ["bridge"], optional = true }
+wf-unpack = { git = "https://github.com/patodois/wf-unpack", rev = "e3ec925fb82221b252a15fa5e1cd2e20cd8eef4c", features = ["bridge"], optional = true }
+hytale-unpack = { git = "https://github.com/patodois/hytale-unpack", rev = "dbc7cbee5560c857f84f0967f97a8986b2193d2e", optional = true }
+nocturne-unpack = { git = "https://github.com/patodois/nocturne-unpack", rev = "49df6cc0df8e1d60d9e0b1c6cc84473ee45d28e6", features = ["bridge"], optional = true }
 
 [dependencies.bevy]
 version = "0.20"
@@ -68,8 +68,3 @@ debug = false
 [profile.dev]
 debug = "line-tables-only"
 
-# The providers' current main still pins rewrite-bridge at the git tag v0.1.0, which would put a second
-# copy of the model types in the build (and `Provider` of one copy is not `Provider` of the other).
-# Their requirement is only "any version from that repository", so the published 0.2.1 can stand in.
-[patch."https://github.com/patodois/rewrite-bridge"]
-rewrite-bridge = { version = "0.2.1" }

@@ -125,9 +125,7 @@ facing the player, and a stone wall hides the half of it behind the wall.
 ## Dependencies
 
 `rewrite-bridge` 0.2.1 (with its `link` feature) and `rewrite-bridge-bevy` 0.2.1 from crates.io, Bevy 0.20, and the providers
-(`wt-unpack`, `wf-unpack`, `hytale-unpack`, `nocturne-unpack`) by git at their `main`. Those still pin `rewrite-bridge` at the git tag
-`v0.1.0`, which would put two copies of its types in the build, so `Cargo.toml` has a `[patch."https://github.com/patodois/rewrite-bridge"]`
-that points that source at the published 0.2.1; `cargo tree -d` shows a single copy. When the providers take 0.2.1 from crates.io
-themselves, delete the patch.
+(`wt-unpack`, `wf-unpack`, `hytale-unpack`, `nocturne-unpack`) by git at pinned revisions. The providers take `rewrite-bridge` 0.2.1
+from crates.io too, so `Cargo.lock` holds exactly one copy of it (`grep -c 'name = "rewrite-bridge"$' Cargo.lock` prints 1).
 
 License: MIT OR Apache-2.0.

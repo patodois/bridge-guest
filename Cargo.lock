@@ -2734,7 +2734,7 @@ dependencies = [
 [[package]]
 name = "hytale-unpack"
 version = "0.1.0"
-source = "git+https://github.com/patodois/hytale-unpack#54d56661dea98499a00510ba4cb0f045f8c17798"
+source = "git+https://github.com/patodois/hytale-unpack?rev=dbc7cbee5560c857f84f0967f97a8986b2193d2e#dbc7cbee5560c857f84f0967f97a8986b2193d2e"
 dependencies = [
  "anyhow",
  "clap",
@@ -3279,7 +3279,7 @@ dependencies = [
 [[package]]
 name = "nocturne-unpack"
 version = "0.1.0"
-source = "git+https://github.com/patodois/nocturne-unpack#18a5c95f40d35ff453e588ade90e3c50c6f9a6ce"
+source = "git+https://github.com/patodois/nocturne-unpack?rev=49df6cc0df8e1d60d9e0b1c6cc84473ee45d28e6#49df6cc0df8e1d60d9e0b1c6cc84473ee45d28e6"
 dependencies = [
  "anyhow",
  "clap",
@@ -5193,7 +5193,7 @@ dependencies = [
 [[package]]
 name = "wf-unpack"
 version = "0.1.0"
-source = "git+https://github.com/patodois/wf-unpack#36aa3b18c4b00ddaca0bb8583cf0948c180fb6b8"
+source = "git+https://github.com/patodois/wf-unpack?rev=e3ec925fb82221b252a15fa5e1cd2e20cd8eef4c#e3ec925fb82221b252a15fa5e1cd2e20cd8eef4c"
 dependencies = [
  "anyhow",
  "clap",
@@ -5690,7 +5690,7 @@ dependencies = [
 [[package]]
 name = "wt-unpack"
 version = "0.1.0"
-source = "git+https://github.com/patodois/wt-unpack#72f44ca666a37bc3668c22d297f962367f871931"
+source = "git+https://github.com/patodois/wt-unpack?rev=4915291663efa60aab97dd781b3fd507bc8de34a#4915291663efa60aab97dd781b3fd507bc8de34a"
 dependencies = [
  "anyhow",
  "clap",
