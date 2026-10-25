@@ -1,7 +1,7 @@
 # bridge-guest
 
 Puts a model from any [rewrite-bridge](https://github.com/patodois/rewrite-bridge) provider (War Thunder, Warframe, Hytale,
-Nocturne) into any game that hosts the passthrough link (`docs/CONTRACT.md` of rewrite-bridge, v1 revision 4).
+Nocturne, Minecraft) into any game that hosts the passthrough link (`docs/CONTRACT.md` of rewrite-bridge, v1 revision 4).
 
 It connects to the host as the link's guest and spawns one entity. For every `Camera` the host sends, it renders the model on the
 GPU (Bevy 0.20, Metal/Vulkan/DX12) with exactly that camera, reads back colour and linear depth in metres, writes both into the
@@ -15,7 +15,7 @@ cached or written next to it (the pixel file lives in the temp directory and is 
 ## Run it
 
 ```sh
-cargo build --release          # all four providers; --no-default-features --features hytale for one
+cargo build --release          # all five providers; --no-default-features --features hytale for one
 
 # the host first (a game with the link, or rewrite-bridge's fake_host), then:
 bridge-guest --provider hytale --id "Server/Models/Intelligent/Trork/Trork.json" --clip Walk --in-front
@@ -25,8 +25,8 @@ bridge-guest --provider wf --game /path/to/Cache.Windows --id "/Lotus/Characters
 
 | Option | |
 |---|---|
-| `--provider wt\|wf\|hytale\|nocturne` | which game's assets |
-| `--game PATH` | War Thunder: the game folder. Warframe: `Cache.Windows`. Hytale: `Assets.zip` (optional, the launcher's install by default). Nocturne: the folder holding `smt3hd_Data` |
+| `--provider wt\|wf\|hytale\|nocturne\|mc` | which game's assets |
+| `--game PATH` | War Thunder: the game folder. Warframe: `Cache.Windows`. Hytale: `Assets.zip` (optional, the launcher's install by default). Nocturne: the folder holding `smt3hd_Data`. Minecraft: a Java Edition client jar (optional, the newest one a launcher installed by default; 1.12.2 to 26.3) |
 | `--id ID` | the id the provider lists (`--list FILTER` prints them) |
 | `--clip NAME` | loop this animation clip (`--list-clips` prints them). A wrong name lists the right ones |
 | `--port 47800` | the host's control port |
@@ -42,7 +42,21 @@ Once a second it prints cameras and frames per second and the latency from "came
 Ids that work (verified on the author's installs): Hytale `Server/Models/Intelligent/Trork/Trork.json` (clips `Walk`, `Run`, `Idle`, ...),
 War Thunder `tanks/usa_m4a1_76w_sherman.grp:m4a1_76w_sherman`, Warframe `/Lotus/Characters/Tenno/Excalibur/Excalibur_skel.fbx`
 (clips come from `?animations=<filter>`; pass the same filters as the `bridge-testbed` config). Nocturne builds and is wired the same
-way but was not run (its files are not on the development machine). Any id of a provider's `list` that `load_animated` accepts should work.
+way but was not run (its files are not on the development machine). Minecraft is opened the same way (`--provider mc --id block/stone`, `--id item/diamond_sword`; blocks and items are props, 1 block = 1 m, no animation); `block/oak_stairs` was drawn into `guest_compose` and stands on its ground with its pixel-art textures (linearly filtered).
+Any id of a provider's `list` that `load_animated` accepts should work.
+
+Providers, as pinned here:
+
+| `--provider` | reader | notes |
+|---|---|---|
+| `wt` | [wt-unpack](https://github.com/patodois/wt-unpack) `0.2.0` (`f9f0515`) | vehicles |
+| `wf` | [wf-unpack](https://github.com/patodois/wf-unpack) `0.2.0` (`5db618f`) | models and animated ids. A Warframe model carries **no sky by default** (the guest draws its own neutral stage anyway) |
+| `hytale` | [hytale-unpack](https://github.com/patodois/hytale-unpack) `0.2.0` (`889a70f`) | entity models with clips. An entity now **wears its default attachments** (hats, hair, eyes, clothes), merged into the body's nodes, so a character is no longer bare |
+| `nocturne` | [nocturne-unpack](https://github.com/patodois/nocturne-unpack) `49df6cc` | demons with the clips of their animator |
+| `mc` | [mc-unpack](https://github.com/patodois/mc-unpack) `0.1.0` (crates.io) | Minecraft: Java Edition blocks and items from the client jar |
+
+**Not an official Minecraft product. Not approved by or associated with Mojang or Microsoft.** The `mc` provider reads the models of a client jar that
+you already own; this project contains no Mojang code and no Mojang assets.
 
 ## How it works
 
@@ -124,8 +138,8 @@ facing the player, and a stone wall hides the half of it behind the wall.
 
 ## Dependencies
 
-`rewrite-bridge` 0.2.1 (with its `link` feature) and `rewrite-bridge-bevy` 0.2.1 from crates.io, Bevy 0.20, and the providers
-(`wt-unpack`, `wf-unpack`, `hytale-unpack`, `nocturne-unpack`) by git at pinned revisions. The providers take `rewrite-bridge` 0.2.1
-from crates.io too, so `Cargo.lock` holds exactly one copy of it (`grep -c 'name = "rewrite-bridge"$' Cargo.lock` prints 1).
+`rewrite-bridge` 0.2.2 (with its `link` feature; 0.2.2 sends `bye` on a bad control line) and `rewrite-bridge-bevy` 0.2.2 from crates.io, Bevy 0.20, and the providers
+(`wt-unpack`, `wf-unpack`, `hytale-unpack`, `nocturne-unpack`) by git at pinned revisions and `mc-unpack` 0.1.0 from crates.io. The providers take `rewrite-bridge` `0.2`
+(`^0.2.1`) from crates.io too, so `Cargo.lock` holds exactly one copy of it (`grep -c 'name = "rewrite-bridge"$' Cargo.lock` prints 1).
 
 License: MIT OR Apache-2.0.

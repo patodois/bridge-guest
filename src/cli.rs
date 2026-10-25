@@ -12,6 +12,8 @@ pub enum ProviderName {
     Hytale,
     /// Shin Megami Tensei III Nocturne HD (the folder that holds smt3hd_Data)
     Nocturne,
+    /// Minecraft: Java Edition (a client jar; without --game, the newest one a launcher installed)
+    Mc,
     /// Two flat planes with exact geometry, for measuring depth (no game needed)
     #[value(hide = true)]
     Selftest,
@@ -31,7 +33,7 @@ pub struct Opts {
     #[arg(long, value_enum)]
     pub provider: ProviderName,
 
-    /// The game's files (see --provider). Hytale may leave it out
+    /// The game's files (see --provider). Hytale and Minecraft may leave it out
     #[arg(long)]
     pub game: Option<PathBuf>,
 

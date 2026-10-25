@@ -1665,6 +1665,7 @@ dependencies = [
  "clap",
  "ctrlc",
  "hytale-unpack",
+ "mc-unpack",
  "nocturne-unpack",
  "rewrite-bridge",
  "rewrite-bridge-bevy",
@@ -2733,8 +2734,8 @@ dependencies = [
 
 [[package]]
 name = "hytale-unpack"
-version = "0.1.0"
-source = "git+https://github.com/patodois/hytale-unpack?rev=dbc7cbee5560c857f84f0967f97a8986b2193d2e#dbc7cbee5560c857f84f0967f97a8986b2193d2e"
+version = "0.2.0"
+source = "git+https://github.com/patodois/hytale-unpack?rev=889a70fd7adbcd10296e40cbac682a0ef786a8df#889a70fd7adbcd10296e40cbac682a0ef786a8df"
 dependencies = [
  "anyhow",
  "clap",
@@ -3117,6 +3118,22 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d1525a2a28c7f4fa0fc98bb91ae755d1e2d1505079e05539e35bc876b5d65ae9"
 dependencies = [
  "regex-automata",
+]
+
+[[package]]
+name = "mc-unpack"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "12541c6841345a08be7f82800f707a514c93264c9eb4c15ac995a125d89d899a"
+dependencies = [
+ "anyhow",
+ "clap",
+ "libc",
+ "png",
+ "rewrite-bridge",
+ "serde",
+ "serde_json",
+ "zip",
 ]
 
 [[package]]
@@ -4114,9 +4131,9 @@ checksum = "19b30a45b0cd0bcca8037f3d0dc3421eaf95327a17cad11964fb8179b4fc4832"
 
 [[package]]
 name = "rewrite-bridge"
-version = "0.2.1"
+version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5b425441f7580367054f138cf3d8a4e2d3ebcfbf6e5077400756ecd4b5ba57a3"
+checksum = "496000fddf9bfc4ffb33034542129f184d646550f256ba5dcd413f2d634b6562"
 dependencies = [
  "libc",
  "memmap2",
@@ -4125,9 +4142,9 @@ dependencies = [
 
 [[package]]
 name = "rewrite-bridge-bevy"
-version = "0.2.1"
+version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ae5a721f63c38264ff2467d050ac48c49691cc90191569fc1ee27c0922d9c241"
+checksum = "a5f3f5fdc3aa957af94fda898ce47fa4d2ad68321f24dad11ae97f9cea944049"
 dependencies = [
  "bevy",
  "rewrite-bridge",
@@ -5192,8 +5209,8 @@ dependencies = [
 
 [[package]]
 name = "wf-unpack"
-version = "0.1.0"
-source = "git+https://github.com/patodois/wf-unpack?rev=e3ec925fb82221b252a15fa5e1cd2e20cd8eef4c#e3ec925fb82221b252a15fa5e1cd2e20cd8eef4c"
+version = "0.2.0"
+source = "git+https://github.com/patodois/wf-unpack?rev=5db618feec7ec0418d9f23351067b7f286ee03d1#5db618feec7ec0418d9f23351067b7f286ee03d1"
 dependencies = [
  "anyhow",
  "clap",
@@ -5689,8 +5706,8 @@ dependencies = [
 
 [[package]]
 name = "wt-unpack"
-version = "0.1.0"
-source = "git+https://github.com/patodois/wt-unpack?rev=4915291663efa60aab97dd781b3fd507bc8de34a#4915291663efa60aab97dd781b3fd507bc8de34a"
+version = "0.2.0"
+source = "git+https://github.com/patodois/wt-unpack?rev=f9f0515b08ca4256a583b2e86c37857eaa1e2036#f9f0515b08ca4256a583b2e86c37857eaa1e2036"
 dependencies = [
  "anyhow",
  "clap",

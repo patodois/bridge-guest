@@ -45,6 +45,14 @@ pub fn open(opts: &Opts) -> Result<DynProvider> {
             anyhow::ensure!(p.is_dir(), "{} is not a folder", p.display());
             Ok(Box::new(nocturne_unpack::bridge::Nocturne::open(&p)?))
         }
+        #[cfg(feature = "mc")]
+        ProviderName::Mc => Ok(Box::new(match &opts.game {
+            Some(p) => {
+                anyhow::ensure!(p.exists(), "{} does not exist", p.display());
+                mc_unpack::bridge::Minecraft::open(p)?
+            }
+            None => mc_unpack::bridge::Minecraft::open_default()?,
+        })),
         #[allow(unreachable_patterns)]
         other => bail!("this build has no `{other:?}` provider (cargo feature of the same name)"),
     }

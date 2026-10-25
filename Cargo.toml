@@ -11,15 +11,16 @@ publish = false
 anyhow = "1"
 clap = { version = "4", features = ["derive"] }
 ctrlc = { version = "3", features = ["termination"] }
-rewrite-bridge = { version = "0.2.1", features = ["link"] }
-rewrite-bridge-bevy = "0.2.1"
+rewrite-bridge = { version = "0.2.2", features = ["link"] }
+rewrite-bridge-bevy = "0.2.2"
 
-# The providers, by git (their current main). Each is a cargo feature, so a build can carry only the
-# games you own.
-wt-unpack = { git = "https://github.com/patodois/wt-unpack", rev = "4915291663efa60aab97dd781b3fd507bc8de34a", features = ["bridge"], optional = true }
-wf-unpack = { git = "https://github.com/patodois/wf-unpack", rev = "e3ec925fb82221b252a15fa5e1cd2e20cd8eef4c", features = ["bridge"], optional = true }
-hytale-unpack = { git = "https://github.com/patodois/hytale-unpack", rev = "dbc7cbee5560c857f84f0967f97a8986b2193d2e", optional = true }
+# The providers, by public git revision (Minecraft from crates.io). Each is a cargo feature, so a build can carry only
+# the games you own.
+wt-unpack = { git = "https://github.com/patodois/wt-unpack", rev = "f9f0515b08ca4256a583b2e86c37857eaa1e2036", features = ["bridge"], optional = true }
+wf-unpack = { git = "https://github.com/patodois/wf-unpack", rev = "5db618feec7ec0418d9f23351067b7f286ee03d1", features = ["bridge"], optional = true }
+hytale-unpack = { git = "https://github.com/patodois/hytale-unpack", rev = "889a70fd7adbcd10296e40cbac682a0ef786a8df", optional = true }
 nocturne-unpack = { git = "https://github.com/patodois/nocturne-unpack", rev = "49df6cc0df8e1d60d9e0b1c6cc84473ee45d28e6", features = ["bridge"], optional = true }
+mc-unpack = { version = "0.1.0", features = ["bridge"], optional = true }
 
 [dependencies.bevy]
 version = "0.20"
@@ -54,11 +55,12 @@ features = [
 ]
 
 [features]
-default = ["wt", "wf", "hytale", "nocturne"]
+default = ["wt", "wf", "hytale", "nocturne", "mc"]
 wt = ["dep:wt-unpack"]
 wf = ["dep:wf-unpack"]
 hytale = ["dep:hytale-unpack"]
 nocturne = ["dep:nocturne-unpack"]
+mc = ["dep:mc-unpack"]
 
 # Bevy and the game readers are far too slow without optimisations; keep our own code debuggable
 [profile.dev.package."*"]
