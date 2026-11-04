@@ -3,6 +3,8 @@
 Puts a model from any [rewrite-bridge](https://github.com/patodois/rewrite-bridge) provider (War Thunder, Warframe, Hytale,
 Nocturne, Minecraft) into any game that hosts the passthrough link (`docs/CONTRACT.md` of rewrite-bridge, v1 revision 4).
 
+**Adding a game as a host?** Read the [guide to adding a game](https://github.com/patodois/rewrite-bridge/blob/main/docs/INTEGRATING.md). This program is a real guest: start it against your host with `--in-front` to see a provider's model stand in your world. It uses rewrite-bridge 0.2.2, which has no link token, so test it against a host that does not require one.
+
 It connects to the host as the link's guest and spawns one entity. For every `Camera` the host sends, it renders the model on the
 GPU (Bevy 0.20, Metal/Vulkan/DX12) with exactly that camera, reads back colour and linear depth in metres, writes both into the
 pixel file and answers with a `Frame` carrying the camera's `seq`. The host reprojects the frame and depth-tests it against its own
