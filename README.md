@@ -1,7 +1,7 @@
 # bridge-guest
 
 Puts a model from any [rewrite-bridge](https://github.com/patodois/rewrite-bridge) provider (War Thunder, Warframe, Hytale,
-Nocturne, Minecraft) into any game that hosts the passthrough link (`docs/CONTRACT.md` of rewrite-bridge, v1 revision 4).
+Nocturne, Minecraft) into any game that hosts the passthrough link (`docs/CONTRACT.md` of rewrite-bridge, v1). It is built on rewrite-bridge 0.2.2, whose link implements revision 4 of the contract (checked in the crate's code: the entity limit, pacing and pixel-file limits are there; the revision 5 collision and syntax rules and the revision 6 token are not), so it cannot connect to a host that requires a token.
 
 **Adding a game as a host?** Read the [guide to adding a game](https://github.com/patodois/rewrite-bridge/blob/main/docs/INTEGRATING.md). This program is a real guest: start it against your host with `--in-front` to see a provider's model stand in your world. It uses rewrite-bridge 0.2.2, which has no link token, so test it against a host that does not require one.
 
