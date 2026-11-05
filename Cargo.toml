@@ -11,16 +11,16 @@ publish = false
 anyhow = "1"
 clap = { version = "4", features = ["derive"] }
 ctrlc = { version = "3", features = ["termination"] }
-rewrite-bridge = { version = "0.2.2", features = ["link"] }
-rewrite-bridge-bevy = "0.2.2"
+rewrite-bridge = { version = "0.3.1", features = ["link"] }
+rewrite-bridge-bevy = "0.3.0"
 
-# The providers, by public git revision (Minecraft from crates.io). Each is a cargo feature, so a build can carry only
+# The providers, by public git revision (their rewrite-bridge 0.3 commits). Each is a cargo feature, so a build can carry only
 # the games you own.
-wt-unpack = { git = "https://github.com/patodois/wt-unpack", rev = "f9f0515b08ca4256a583b2e86c37857eaa1e2036", features = ["bridge"], optional = true }
-wf-unpack = { git = "https://github.com/patodois/wf-unpack", rev = "5db618feec7ec0418d9f23351067b7f286ee03d1", features = ["bridge"], optional = true }
-hytale-unpack = { git = "https://github.com/patodois/hytale-unpack", rev = "889a70fd7adbcd10296e40cbac682a0ef786a8df", optional = true }
-nocturne-unpack = { git = "https://github.com/patodois/nocturne-unpack", rev = "49df6cc0df8e1d60d9e0b1c6cc84473ee45d28e6", features = ["bridge"], optional = true }
-mc-unpack = { version = "0.1.0", features = ["bridge"], optional = true }
+wt-unpack = { git = "https://github.com/patodois/wt-unpack", rev = "c06c71cd9d3e57b686b5e98531c681aef18b40a3", features = ["bridge"], optional = true }
+wf-unpack = { git = "https://github.com/patodois/wf-unpack", rev = "c482a56e7480335b15f336af96f563430be01ac7", features = ["bridge"], optional = true }
+hytale-unpack = { git = "https://github.com/patodois/hytale-unpack", rev = "c29e8db3e98fa86fdbba2b2bf78e8f0e32c4aa3e", optional = true }
+nocturne-unpack = { git = "https://github.com/patodois/nocturne-unpack", rev = "355d5787c88c422c8e074592b1f5e1d54b381e49", features = ["bridge"], optional = true }
+mc-unpack = { git = "https://github.com/patodois/mc-unpack", rev = "43ef7eff2246cb400843dace1072976103f83814", features = ["bridge"], optional = true }
 
 [dependencies.bevy]
 version = "0.20"

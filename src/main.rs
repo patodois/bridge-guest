@@ -31,6 +31,19 @@ use crate::placement::{Placement, PlacementOptions};
 use crate::render::{Guest, GuestPlugin, GuestRes, ModelSlot, ShutdownFlag};
 use crate::stats::Stats;
 
+/// The first line of a token file. Errors name the file and never quote its contents.
+fn read_token(path: &std::path::Path) -> Result<String> {
+    let text = std::fs::read_to_string(path)
+        .with_context(|| format!("could not read the token file {}", path.display()))?;
+    let token = text.lines().next().unwrap_or("").trim_end_matches('\r');
+    anyhow::ensure!(
+        !token.is_empty(),
+        "the token file {} has no token on its first line",
+        path.display()
+    );
+    Ok(token.to_string())
+}
+
 fn main() -> Result<()> {
     let opts = Opts::parse();
     let provider = providers::open(&opts)?;
@@ -102,12 +115,22 @@ fn main() -> Result<()> {
         rest.max.z - rest.min.z
     );
 
+    let token = match &opts.token_file {
+        Some(path) => Some(read_token(path)?),
+        None => None,
+    };
     let link = Link::guest(LinkConfig {
         control_port: opts.port,
+        token,
+        endpoint_file: opts.endpoint_file.clone(),
         ..LinkConfig::new(format!("bridge-guest ({})", provider.game()))
     })
     .with_context(|| "could not open the link sockets")?;
-    println!("connecting to 127.0.0.1:{}", opts.port);
+    match (&opts.endpoint_file, &opts.token_file) {
+        (Some(file), _) => println!("connecting with the port and token of {}", file.display()),
+        (None, Some(_)) => println!("connecting to 127.0.0.1:{} with a token", opts.port),
+        (None, None) => println!("connecting to 127.0.0.1:{}", opts.port),
+    }
 
     let placement = Placement::new(
         PlacementOptions {

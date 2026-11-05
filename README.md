@@ -1,9 +1,9 @@
 # bridge-guest
 
 Puts a model from any [rewrite-bridge](https://github.com/patodois/rewrite-bridge) provider (War Thunder, Warframe, Hytale,
-Nocturne, Minecraft) into any game that hosts the passthrough link (`docs/CONTRACT.md` of rewrite-bridge, v1). It is built on rewrite-bridge 0.2.2, whose link implements revision 4 of the contract (checked in the crate's code: the entity limit, pacing and pixel-file limits are there; the revision 5 collision and syntax rules and the revision 6 token are not), so it cannot connect to a host that requires a token.
+Nocturne, Minecraft) into any game that hosts the passthrough link (`docs/CONTRACT.md` of rewrite-bridge, v1). It is built on rewrite-bridge 0.3.1, whose link implements revision 6 of the contract, so it can connect to a host that requires a token (`--endpoint-file`, `--token-file`, below).
 
-**Adding a game as a host?** Read the [guide to adding a game](https://github.com/patodois/rewrite-bridge/blob/main/docs/INTEGRATING.md). This program is a real guest: start it against your host with `--in-front` to see a provider's model stand in your world. It uses rewrite-bridge 0.2.2, which has no link token, so test it against a host that does not require one.
+**Adding a game as a host?** Read the [guide to adding a game](https://github.com/patodois/rewrite-bridge/blob/main/docs/INTEGRATING.md). This program is a real guest: start it against your host with `--in-front` to see a provider's model stand in your world. If your host requires a token (contract section 6.2), pass its endpoint file with `--endpoint-file`; see "A host that requires a token" below.
 
 It connects to the host as the link's guest and spawns one entity. For every `Camera` the host sends, it renders the model on the
 GPU (Bevy 0.20, Metal/Vulkan/DX12) with exactly that camera, reads back colour and linear depth in metres, writes both into the
@@ -32,6 +32,8 @@ bridge-guest --provider wf --game /path/to/Cache.Windows --id "/Lotus/Characters
 | `--id ID` | the id the provider lists (`--list FILTER` prints them) |
 | `--clip NAME` | loop this animation clip (`--list-clips` prints them). A wrong name lists the right ones |
 | `--port 47800` | the host's control port |
+| `--endpoint-file FILE` | the host's endpoint file (port and token, written by a host that requires a token; contract section 6.2). Read again before every attempt, so a restarted host is found. Replaces `--port` and `--token-file` |
+| `--token-file FILE` | with `--port`: send the token on the first line of this file, for a host whose token is fixed rather than generated |
 | `--size 640x360` | the largest image sent. The host's aspect ratio is kept inside it, so pixels stay square |
 | `--in-front` | stand `--distance` metres (default 4, more for a big model) ahead of the first camera, facing it, on the host's ground (from its `Collision` snapshot). Without it the model stands at the world origin |
 | `--scale 1.0`, `--yaw DEG`, `--distance M` | size, heading, and distance for `--in-front` |
@@ -39,23 +41,36 @@ bridge-guest --provider wf --game /path/to/Cache.Windows --id "/Lotus/Characters
 | `--window` | also show the colour image in a window. By default there is no window at all |
 | `--seconds N` | quit after N seconds (Ctrl-C and SIGTERM also say `bye` and clean up) |
 
+### A host that requires a token
+
+A host that sets a token (or asks the library to make one) refuses a guest whose `hello` does not carry it, with `bye` `unauthorized`. The host
+writes the port and the token to an owner-only endpoint file; give the guest that file and nothing else:
+
+```sh
+bridge-guest --provider hytale --id "Server/Models/Beast/Rat.json" --in-front --endpoint-file /path/the/host/wrote.json
+```
+
+The file must be a regular file that only its owner can read (a guest refuses a looser one on macOS and Linux), and it is read again before
+every connection attempt. Without a token, or with a wrong one, the guest prints `handshake failed: peer said bye: unauthorized` and tries
+again twice a second until `--seconds` ends or you stop it. The token is never printed. `--token-file` takes a file whose first line is the
+token, with `--port`, for a host whose token you set yourself.
+
 Once a second it prints cameras and frames per second and the latency from "camera received" to "frame sent", and a summary at the end.
 
 Ids that work (verified on the author's installs): Hytale `Server/Models/Intelligent/Trork/Trork.json` (clips `Walk`, `Run`, `Idle`, ...),
 War Thunder `tanks/usa_m4a1_76w_sherman.grp:m4a1_76w_sherman`, Warframe `/Lotus/Characters/Tenno/Excalibur/Excalibur_skel.fbx`
-(clips come from `?animations=<filter>`; pass the same filters as the `bridge-testbed` config). Nocturne builds and is wired the same
-way but was not run (its files are not on the development machine). Minecraft is opened the same way (`--provider mc --id block/stone`, `--id item/diamond_sword`; blocks and items are props, 1 block = 1 m, no animation); `block/oak_stairs` was drawn into `guest_compose` and stands on its ground with its pixel-art textures (linearly filtered).
+(clips come from `?animations=<filter>`; pass the same filters as the `bridge-testbed` config). Nocturne `dvl0x01` (a demon with 5 clips) was run with `--game` set to the folder that holds `smt3hd_Data`. Minecraft is opened the same way (`--provider mc --id block/stone`, `--id item/diamond_sword`; blocks and items are props, 1 block = 1 m, no animation); `block/oak_stairs` was drawn into `guest_compose` and stands on its ground with its pixel-art textures (linearly filtered).
 Any id of a provider's `list` that `load_animated` accepts should work.
 
 Providers, as pinned here:
 
 | `--provider` | reader | notes |
 |---|---|---|
-| `wt` | [wt-unpack](https://github.com/patodois/wt-unpack) `0.2.0` (`f9f0515`) | vehicles |
-| `wf` | [wf-unpack](https://github.com/patodois/wf-unpack) `0.2.0` (`5db618f`) | models and animated ids. A Warframe model carries **no sky by default** (the guest draws its own neutral stage anyway) |
-| `hytale` | [hytale-unpack](https://github.com/patodois/hytale-unpack) `0.2.0` (`889a70f`) | entity models with clips. An entity now **wears its default attachments** (hats, hair, eyes, clothes), merged into the body's nodes, so a character is no longer bare |
-| `nocturne` | [nocturne-unpack](https://github.com/patodois/nocturne-unpack) `49df6cc` | demons with the clips of their animator |
-| `mc` | [mc-unpack](https://github.com/patodois/mc-unpack) `0.1.0` (crates.io) | Minecraft: Java Edition blocks and items from the client jar |
+| `wt` | [wt-unpack](https://github.com/patodois/wt-unpack) `0.3.0` (`c06c71c`) | vehicles |
+| `wf` | [wf-unpack](https://github.com/patodois/wf-unpack) `0.3.1` (`c482a56`) | models and animated ids. A Warframe model carries **no sky by default** (the guest draws its own neutral stage anyway) |
+| `hytale` | [hytale-unpack](https://github.com/patodois/hytale-unpack) `0.2.1` (`c29e8db`) | entity models with clips. An entity now **wears its default attachments** (hats, hair, eyes, clothes), merged into the body's nodes, so a character is no longer bare |
+| `nocturne` | [nocturne-unpack](https://github.com/patodois/nocturne-unpack) `0.2.0` (`355d578`) | demons with the clips of their animator |
+| `mc` | [mc-unpack](https://github.com/patodois/mc-unpack) `0.3.0` (`43ef7ef`) | Minecraft: Java Edition blocks and items from the client jar |
 
 **Not an official Minecraft product. Not approved by or associated with Mojang or Microsoft.** The `mc` provider reads the models of a client jar that
 you already own; this project contains no Mojang code and no Mojang assets.
@@ -128,6 +143,10 @@ Against the real hosts: rewrite-bridge's `fake_host` (`--dump` writes the compos
 `autotest/host_wall.txt` of minecraft-link with this program in place of `fake_guest`: the model stands on the flat world 4 m ahead,
 facing the player, and a stone wall hides the half of it behind the wall.
 
+A host that requires a token: rewrite-bridge's `interop_peer host --port 47890 --endpoint FILE --label x` makes the token and writes `FILE` (start it with
+`umask 077`, in a directory only you can use). Its session is scripted, so it reports that this guest did not follow it, but the handshake shows: with `--endpoint-file FILE`
+the guest prints `connected`, and without the token, or with a wrong one, `handshake failed: peer said bye: unauthorized`.
+
 ## Limits
 
 - One surface per pixel (that is what a depth plane holds): translucent materials become cut-outs (alpha 0.5), glass is not glass.
@@ -140,8 +159,9 @@ facing the player, and a stone wall hides the half of it behind the wall.
 
 ## Dependencies
 
-`rewrite-bridge` 0.2.2 (with its `link` feature; 0.2.2 sends `bye` on a bad control line) and `rewrite-bridge-bevy` 0.2.2 from crates.io, Bevy 0.20, and the providers
-(`wt-unpack`, `wf-unpack`, `hytale-unpack`, `nocturne-unpack`) by git at pinned revisions and `mc-unpack` 0.1.0 from crates.io. The providers take `rewrite-bridge` `0.2`
-(`^0.2.1`) from crates.io too, so `Cargo.lock` holds exactly one copy of it (`grep -c 'name = "rewrite-bridge"$' Cargo.lock` prints 1).
+`rewrite-bridge` 0.3.1 (with its `link` feature, which has the token) and `rewrite-bridge-bevy` 0.3.0 from crates.io, Bevy 0.20, and the five providers by git at pinned
+revisions (table above). The providers take `rewrite-bridge` `0.3` (`^0.3.1`) from crates.io too, so `Cargo.lock` holds exactly one copy of it
+(`grep -c 'name = "rewrite-bridge"$' Cargo.lock` prints 1). Before 1.0 a new minor number is a different crate, so a provider revision that still asks for 0.2 does not
+build with this one. `wf-unpack` at these revisions no longer uses `oozextract`, so that crate is not in `Cargo.lock` (`cargo tree --locked -i oozextract` finds nothing).
 
 License: MIT OR Apache-2.0.

@@ -57,6 +57,17 @@ pub struct Opts {
     #[arg(long, default_value_t = 47800)]
     pub port: u16,
 
+    /// Read the port and the token from the host's endpoint file (revision 6 of the contract, section 6.2),
+    /// before every connection attempt, so a restarted host is found. Use it with a host that requires a
+    /// token and writes this file. Instead of --port and --token-file
+    #[arg(long, value_name = "FILE", conflicts_with_all = ["port", "token_file"])]
+    pub endpoint_file: Option<PathBuf>,
+
+    /// Send the token in this file (its first line) with --port, for a host whose token is fixed rather
+    /// than generated. The token is never printed
+    #[arg(long, value_name = "FILE")]
+    pub token_file: Option<PathBuf>,
+
     /// Largest image to render and send, WxH; the host's aspect ratio is kept inside it
     #[arg(long, default_value = "640x360", value_parser = parse_size)]
     pub size: (u32, u32),
@@ -141,6 +152,22 @@ mod tests {
             (47801, (800, 450), true, 2.0)
         );
         assert!(Opts::try_parse_from(["bridge-guest", "--provider", "wt"]).is_err());
+        assert!(Opts::try_parse_from(["bridge-guest", "--provider", "wt", "--list", ""]).is_ok());
+    }
+
+    #[test]
+    fn the_token_options_parse_and_the_endpoint_file_replaces_the_port() {
+        let base = ["bridge-guest", "--provider", "selftest", "--id", "x"];
+        let with = |extra: &[&str]| Opts::try_parse_from(base.iter().chain(extra));
+        let o = with(&["--endpoint-file", "/e.json"]).unwrap();
+        assert_eq!(
+            o.endpoint_file.as_deref(),
+            Some(std::path::Path::new("/e.json"))
+        );
+        let o = with(&["--port", "47801", "--token-file", "/t"]).unwrap();
+        assert_eq!((o.port, o.token_file.is_some()), (47801, true));
+        assert!(with(&["--endpoint-file", "/e", "--port", "47801"]).is_err());
+        assert!(with(&["--endpoint-file", "/e", "--token-file", "/t"]).is_err());
         assert!(Opts::try_parse_from(["bridge-guest", "--provider", "wt", "--list", ""]).is_ok());
     }
 }
