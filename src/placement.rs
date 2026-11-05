@@ -250,19 +250,54 @@ mod tests {
         assert!(p.on_camera(&other).is_none());
     }
 
-    #[test]
-    fn an_invalid_first_camera_does_not_decide_the_placement() {
+    fn look() -> Camera {
+        Camera::look_at(
+            [10.0, 1.7, 10.0],
+            [10.0, 1.7, 0.0],
+            1.0,
+            0.1,
+            100.0,
+            [16, 9],
+        )
+    }
+
+    /// `bad` is refused and places nothing; the next good camera then decides the placement
+    fn refused_then_good(bad: &Camera) {
         let mut p = Placement::new(opts(true), bounds());
-        let mut bad = Camera::look_at([10.0, 1.7, 10.0], [10.0, 1.7, 0.0], 1.0, 0.1, 100.0, [16, 9]);
-        bad.view[12] = f32::NAN;
-        assert!(p.on_camera(&bad).is_none());
+        assert!(p.on_camera(bad).is_none());
         assert!(!p.is_placed(), "a refused camera places nothing");
-        let good = Camera::look_at([10.0, 1.7, 10.0], [10.0, 1.7, 0.0], 1.0, 0.1, 100.0, [16, 9]);
-        assert!(p.on_camera(&good).is_some());
+        assert!(p.on_camera(&look()).is_some());
         let t = p.transform().unwrap();
         assert!(t.translation.is_finite(), "{:?}", t.translation);
         let pose = p.pose(1, 0).unwrap();
         assert!(pose.translation.iter().all(|v| v.is_finite()));
+    }
+
+    #[test]
+    fn a_first_camera_with_nan_in_its_view_does_not_decide_the_placement() {
+        let mut bad = look();
+        bad.view[12] = f32::NAN;
+        refused_then_good(&bad);
+    }
+
+    #[test]
+    fn a_first_camera_with_no_near_plane_does_not_decide_the_placement() {
+        // Its eye and forward are finite: only the renderer's own check refuses it
+        let mut bad = look();
+        bad.near = 0.0;
+        assert!(bad.eye().iter().all(|v| v.is_finite()));
+        refused_then_good(&bad);
+    }
+
+    #[test]
+    fn a_first_camera_whose_eye_overflows_does_not_decide_the_placement() {
+        // Every number is finite and the projection is fine, so only the eye itself shows the fault
+        let mut bad = look();
+        bad.view[0] = 3.0e38;
+        bad.view[12] = 3.0e38;
+        assert!(bad.view.iter().chain(&bad.proj).all(|v| v.is_finite()));
+        assert!(HostProjection::from_host(&bad).is_ok());
+        refused_then_good(&bad);
     }
 
     #[test]
