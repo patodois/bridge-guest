@@ -11,6 +11,7 @@ use bevy::math::{Quat, Vec3};
 use rewrite_bridge::link::{Camera, Pose, Triangle};
 
 use crate::bounds::Bounds;
+use crate::camera::HostProjection;
 
 /// How far below the eye the ground is guessed to be before the host's collision says
 pub const EYE_HEIGHT: f32 = 1.6;
@@ -80,7 +81,15 @@ impl Placement {
         if self.anchor.is_some() {
             return None;
         }
+        // A camera the renderer will refuse must not decide where the model stands: the anchor is
+        // kept for the whole session, so a bad first sample would poison every later one.
+        if HostProjection::from_host(camera).is_err() {
+            return None;
+        }
         let (eye, f) = (camera.eye(), camera.forward());
+        if !eye.iter().chain(&f).all(|v| v.is_finite()) {
+            return None;
+        }
         let len = (f[0] * f[0] + f[2] * f[2]).sqrt();
         let (dx, dz) = if len > 1e-3 {
             (f[0] / len, f[2] / len)
@@ -239,6 +248,21 @@ mod tests {
         // A second camera changes nothing
         let other = Camera::look_at([0.0, 5.0, 0.0], [1.0, 5.0, 0.0], 1.0, 0.1, 100.0, [16, 9]);
         assert!(p.on_camera(&other).is_none());
+    }
+
+    #[test]
+    fn an_invalid_first_camera_does_not_decide_the_placement() {
+        let mut p = Placement::new(opts(true), bounds());
+        let mut bad = Camera::look_at([10.0, 1.7, 10.0], [10.0, 1.7, 0.0], 1.0, 0.1, 100.0, [16, 9]);
+        bad.view[12] = f32::NAN;
+        assert!(p.on_camera(&bad).is_none());
+        assert!(!p.is_placed(), "a refused camera places nothing");
+        let good = Camera::look_at([10.0, 1.7, 10.0], [10.0, 1.7, 0.0], 1.0, 0.1, 100.0, [16, 9]);
+        assert!(p.on_camera(&good).is_some());
+        let t = p.transform().unwrap();
+        assert!(t.translation.is_finite(), "{:?}", t.translation);
+        let pose = p.pose(1, 0).unwrap();
+        assert!(pose.translation.iter().all(|v| v.is_finite()));
     }
 
     #[test]
