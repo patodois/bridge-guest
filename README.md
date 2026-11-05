@@ -62,6 +62,29 @@ War Thunder `tanks/usa_m4a1_76w_sherman.grp:m4a1_76w_sherman`, Warframe `/Lotus/
 (clips come from `?animations=<filter>`; pass the same filters as the `bridge-testbed` config). Nocturne `dvl0x01` (a demon with 5 clips) was run with `--game` set to the folder that holds `smt3hd_Data`. Minecraft is opened the same way (`--provider mc --id block/stone`, `--id item/diamond_sword`; blocks and items are props, 1 block = 1 m, no animation); `block/oak_stairs` was drawn into `guest_compose` and stands on its ground with its pixel-art textures (linearly filtered).
 Any id of a provider's `list` that `load_animated` accepts should work.
 
+### Warframe ids
+
+`--id` takes the id the provider lists: the path of a model (`/Lotus/Characters/Tenno/Excalibur/Excalibur_skel.fbx`),
+optionally with `?animations=<filter>`. A **uniqueName** is not an id: `--id /Lotus/Powersuits/Excalibur/Excalibur` stops
+with `Warframe could not load ...: ... is not in H.Misc`. wf-unpack's `resolve` command (a release after 0.4.0; the
+`wf` pin below is 0.3.1, but the command is a separate program and any build of it works) turns a uniqueName into the
+ids it reaches, or says why there are none.
+
+Run on 2026-11-05 on macOS arm64 (Metal) with a Steam install of build 25757057, the `wf` provider as pinned, against
+rewrite-bridge's `fake_host` (`--port 47871`), for 10 s:
+
+```sh
+bridge-guest --provider wf --game /path/to/Cache.Windows --port 47871 --in-front --max-texture 512 --size 320x240 --seconds 10 \
+  --id "/Lotus/Characters/Tenno/Excalibur/Excalibur_skel.fbx?animations=/Lotus/Animations/Tenno/Movement/MeleeWeapon/Sword/Jog*" \
+  --clip /Lotus/Animations/Tenno/Movement/MeleeWeapon/Sword/JogForward_anim.fbx
+```
+
+The guest's summary: 510 cameras, 497 frames in 10.3 s (48.2 fps), camera received to frame sent mean 5.2 ms, p95 8.3 ms;
+peak resident memory 0.75 GB (`/usr/bin/time -l`). `fake_host` logged the spawn with the id above, `malformed 0 stale 0
+foreign 0 unknown_entity 0`, and a frame it wrote with `--dump` shows a jogging Excalibur standing on the host's floor
+beside the host's pillar (one frame was looked at; occlusion by the pillar was not checked). Not run: a Warframe host, a Warframe client of any kind, a level as a scene (this
+guest has no scenes), another build of the game.
+
 Providers, as pinned here:
 
 | `--provider` | reader | notes |
