@@ -256,7 +256,7 @@ dependencies = [
  "objc2-foundation 0.3.2",
  "parking_lot",
  "percent-encoding",
- "windows-sys 0.61.2",
+ "windows-sys 0.52.0",
  "wl-clipboard-rs",
  "x11rb",
 ]
@@ -1181,7 +1181,7 @@ dependencies = [
  "wasm-bindgen",
  "wasm-bindgen-futures",
  "web-time",
- "windows-sys 0.61.2",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -1640,7 +1640,7 @@ dependencies = [
  "hytale-unpack",
  "mc-unpack",
  "nocturne-unpack",
- "rewrite-bridge 0.4.0",
+ "rewrite-bridge",
  "rewrite-bridge-bevy",
  "wf-unpack",
  "wt-unpack",
@@ -2154,7 +2154,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "39cab71617ae0d63f51a36d69f866391735b51691dbda63cf6f96d042b63efeb"
 dependencies = [
  "libc",
- "windows-sys 0.61.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -2520,14 +2520,14 @@ dependencies = [
 
 [[package]]
 name = "hytale-unpack"
-version = "0.2.1"
-source = "git+https://github.com/patodois/hytale-unpack?rev=c29e8db3e98fa86fdbba2b2bf78e8f0e32c4aa3e#c29e8db3e98fa86fdbba2b2bf78e8f0e32c4aa3e"
+version = "0.4.0"
+source = "git+https://github.com/patodois/hytale-unpack?rev=a23c089a0daa096ad1ac90b64b081bdcd45f7910#a23c089a0daa096ad1ac90b64b081bdcd45f7910"
 dependencies = [
  "anyhow",
  "clap",
  "libc",
  "png",
- "rewrite-bridge 0.3.1",
+ "rewrite-bridge",
  "serde",
  "serde_json",
  "zip",
@@ -2892,15 +2892,15 @@ dependencies = [
 
 [[package]]
 name = "mc-unpack"
-version = "0.3.0"
-source = "git+https://github.com/patodois/mc-unpack?rev=43ef7eff2246cb400843dace1072976103f83814#43ef7eff2246cb400843dace1072976103f83814"
+version = "0.5.0"
+source = "git+https://github.com/patodois/mc-unpack?rev=003c9e9a2e95f45c087994225f254de22ef87406#003c9e9a2e95f45c087994225f254de22ef87406"
 dependencies = [
  "anyhow",
  "clap",
  "flate2",
  "libc",
  "png",
- "rewrite-bridge 0.3.1",
+ "rewrite-bridge",
  "serde",
  "serde_json",
  "zip",
@@ -3050,8 +3050,8 @@ dependencies = [
 
 [[package]]
 name = "nocturne-unpack"
-version = "0.2.0"
-source = "git+https://github.com/patodois/nocturne-unpack?rev=355d5787c88c422c8e074592b1f5e1d54b381e49#355d5787c88c422c8e074592b1f5e1d54b381e49"
+version = "0.4.0"
+source = "git+https://github.com/patodois/nocturne-unpack?rev=e9a5a8b87b17ffa15e7ec8eaa83cc38095c97140#e9a5a8b87b17ffa15e7ec8eaa83cc38095c97140"
 dependencies = [
  "anyhow",
  "bcn-decode",
@@ -3059,7 +3059,7 @@ dependencies = [
  "libc",
  "memmap2",
  "png",
- "rewrite-bridge 0.3.1",
+ "rewrite-bridge",
  "serde",
  "serde_json",
  "unity-bundle",
@@ -3086,7 +3086,7 @@ version = "0.50.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7957b9740744892f114936ab4a57b3f487491bbeafaf8083688b16841a4240e5"
 dependencies = [
- "windows-sys 0.61.2",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -3465,7 +3465,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7d8fae84b431384b68627d0f9b3b1245fcf9f46f6c0e3dc902e9dce64edd1967"
 dependencies = [
  "libc",
- "windows-sys 0.61.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -3802,12 +3802,6 @@ checksum = "19b30a45b0cd0bcca8037f3d0dc3421eaf95327a17cad11964fb8179b4fc4832"
 
 [[package]]
 name = "rewrite-bridge"
-version = "0.3.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8a296e290e63610ff1c5a4ae012666464d3697ac5dfd04acff5681f46c4f37b6"
-
-[[package]]
-name = "rewrite-bridge"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "73b1e463fa808a2b4c25d48c214f0cdc66ff09db3c283009f031534e331b3587"
@@ -3826,7 +3820,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f005be731748492c294fec3653f58b554a0c9df5002f989feb7e663a84e3c0e1"
 dependencies = [
  "bevy",
- "rewrite-bridge 0.4.0",
+ "rewrite-bridge",
 ]
 
 [[package]]
@@ -3887,7 +3881,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys 0.12.1",
- "windows-sys 0.61.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -4798,8 +4792,8 @@ dependencies = [
 
 [[package]]
 name = "wf-unpack"
-version = "0.3.1"
-source = "git+https://github.com/patodois/wf-unpack?rev=c482a56e7480335b15f336af96f563430be01ac7#c482a56e7480335b15f336af96f563430be01ac7"
+version = "0.5.0"
+source = "git+https://github.com/patodois/wf-unpack?rev=e47563b878e6a28b0eec7579621d5635868beb7d#e47563b878e6a28b0eec7579621d5635868beb7d"
 dependencies = [
  "anyhow",
  "bcn-decode",
@@ -4807,7 +4801,7 @@ dependencies = [
  "libc",
  "lztans",
  "png",
- "rewrite-bridge 0.3.1",
+ "rewrite-bridge",
  "serde_json",
  "zstd",
 ]
@@ -4994,7 +4988,7 @@ version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c2a7b1c03c876122aa43f3020e6c3c3ee5c05081c9a00739faf7503aeba10d22"
 dependencies = [
- "windows-sys 0.61.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -5301,8 +5295,8 @@ dependencies = [
 
 [[package]]
 name = "wt-unpack"
-version = "0.3.0"
-source = "git+https://github.com/patodois/wt-unpack?rev=c06c71cd9d3e57b686b5e98531c681aef18b40a3#c06c71cd9d3e57b686b5e98531c681aef18b40a3"
+version = "0.5.0"
+source = "git+https://github.com/patodois/wt-unpack?rev=090812bd4d3d232e4a1ab1b99e09dbd634031a6c#090812bd4d3d232e4a1ab1b99e09dbd634031a6c"
 dependencies = [
  "anyhow",
  "clap",
@@ -5312,7 +5306,7 @@ dependencies = [
  "md-5",
  "memmap2",
  "png",
- "rewrite-bridge 0.3.1",
+ "rewrite-bridge",
  "ruzstd",
  "serde_json",
  "wt-formats",

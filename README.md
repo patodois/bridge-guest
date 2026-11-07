@@ -66,8 +66,7 @@ Any id of a provider's `list` that `load_animated` accepts should work.
 
 `--id` takes the id the provider lists: the path of a model (`/Lotus/Characters/Tenno/Excalibur/Excalibur_skel.fbx`),
 optionally with `?animations=<filter>`. A **uniqueName** is not an id: `--id /Lotus/Powersuits/Excalibur/Excalibur` stops
-with `Warframe could not load ...: ... is not in H.Misc`. wf-unpack's `resolve` command (a release after 0.4.0; the
-`wf` pin below is 0.3.1, but the command is a separate program and any build of it works) turns a uniqueName into the
+with `Warframe could not load ...: ... is not in H.Misc`. wf-unpack's `resolve` command turns a uniqueName into the
 ids it reaches, or says why there are none.
 
 Run on 2026-11-05 on macOS arm64 (Metal) with a Steam install of build 25757057, the `wf` provider as pinned, against
@@ -89,11 +88,11 @@ Providers, as pinned here:
 
 | `--provider` | reader | notes |
 |---|---|---|
-| `wt` | [wt-unpack](https://github.com/patodois/wt-unpack) `0.3.0` (`c06c71c`) | vehicles |
-| `wf` | [wf-unpack](https://github.com/patodois/wf-unpack) `0.3.1` (`c482a56`) | models and animated ids. A Warframe model carries **no sky by default** (the guest draws its own neutral stage anyway) |
-| `hytale` | [hytale-unpack](https://github.com/patodois/hytale-unpack) `0.2.1` (`c29e8db`) | entity models with clips. An entity now **wears its default attachments** (hats, hair, eyes, clothes), merged into the body's nodes, so a character is no longer bare |
-| `nocturne` | [nocturne-unpack](https://github.com/patodois/nocturne-unpack) `0.2.0` (`355d578`) | demons with the clips of their animator |
-| `mc` | [mc-unpack](https://github.com/patodois/mc-unpack) `0.3.0` (`43ef7ef`) | Minecraft: Java Edition blocks and items from the client jar |
+| `wt` | [wt-unpack](https://github.com/patodois/wt-unpack) `0.5.0` (`090812b`) | vehicles |
+| `wf` | [wf-unpack](https://github.com/patodois/wf-unpack) `0.5.0` (`e47563b`) | models and animated ids. A Warframe model carries **no sky by default** (the guest draws its own neutral stage anyway) |
+| `hytale` | [hytale-unpack](https://github.com/patodois/hytale-unpack) `0.4.0` (`a23c089`) | entity models with clips. An entity now **wears its default attachments** (hats, hair, eyes, clothes), merged into the body's nodes, so a character is no longer bare |
+| `nocturne` | [nocturne-unpack](https://github.com/patodois/nocturne-unpack) `0.4.0` (`e9a5a8b`) | demons with the clips of their animator |
+| `mc` | [mc-unpack](https://github.com/patodois/mc-unpack) `0.5.0` (`003c9e9`) | Minecraft: Java Edition blocks and items from the client jar |
 
 **Not an official Minecraft product. Not approved by or associated with Mojang or Microsoft.** The `mc` provider reads the models of a client jar that
 you already own; this project contains no Mojang code and no Mojang assets.

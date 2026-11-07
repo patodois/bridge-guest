@@ -14,14 +14,13 @@ ctrlc = { version = "3", features = ["termination"] }
 rewrite-bridge = { version = "0.4", features = ["link"] }
 rewrite-bridge-bevy = "0.4"
 
-# The providers, by public git revision. These revisions are still their rewrite-bridge 0.3 commits: they move to the
-# rewrite-bridge 0.4 releases of the five readers, and with them the build resolves two copies of rewrite-bridge, so it only
-# builds without them (--no-default-features) until they do. Each is a cargo feature, so a build can carry only the games you own.
-wt-unpack = { git = "https://github.com/patodois/wt-unpack", rev = "c06c71cd9d3e57b686b5e98531c681aef18b40a3", features = ["bridge"], optional = true }
-wf-unpack = { git = "https://github.com/patodois/wf-unpack", rev = "c482a56e7480335b15f336af96f563430be01ac7", features = ["bridge"], optional = true }
-hytale-unpack = { git = "https://github.com/patodois/hytale-unpack", rev = "c29e8db3e98fa86fdbba2b2bf78e8f0e32c4aa3e", optional = true }
-nocturne-unpack = { git = "https://github.com/patodois/nocturne-unpack", rev = "355d5787c88c422c8e074592b1f5e1d54b381e49", features = ["bridge"], optional = true }
-mc-unpack = { git = "https://github.com/patodois/mc-unpack", rev = "43ef7eff2246cb400843dace1072976103f83814", features = ["bridge"], optional = true }
+# The providers, by public git revision: the rewrite-bridge 0.4 release commit of each reader, so Cargo.lock holds one copy
+# of rewrite-bridge. Each is a cargo feature, so a build can carry only the games you own.
+wt-unpack = { git = "https://github.com/patodois/wt-unpack", rev = "090812bd4d3d232e4a1ab1b99e09dbd634031a6c", features = ["bridge"], optional = true }
+wf-unpack = { git = "https://github.com/patodois/wf-unpack", rev = "e47563b878e6a28b0eec7579621d5635868beb7d", features = ["bridge"], optional = true }
+hytale-unpack = { git = "https://github.com/patodois/hytale-unpack", rev = "a23c089a0daa096ad1ac90b64b081bdcd45f7910", optional = true }
+nocturne-unpack = { git = "https://github.com/patodois/nocturne-unpack", rev = "e9a5a8b87b17ffa15e7ec8eaa83cc38095c97140", features = ["bridge"], optional = true }
+mc-unpack = { git = "https://github.com/patodois/mc-unpack", rev = "003c9e9a2e95f45c087994225f254de22ef87406", features = ["bridge"], optional = true }
 
 # The two probes include the same frame reader module, which has its own tests
 [[example]]
