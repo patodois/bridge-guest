@@ -1,7 +1,7 @@
 # bridge-guest
 
 Puts a model from any [rewrite-bridge](https://github.com/patodois/rewrite-bridge) provider (War Thunder, Warframe, Hytale,
-Nocturne, Minecraft) into any game that hosts the passthrough link (`docs/CONTRACT.md` of rewrite-bridge, v1). It is built on rewrite-bridge 0.3.1, whose link implements revision 6 of the contract, so it can connect to a host that requires a token (`--endpoint-file`, `--token-file`, below).
+Nocturne, Minecraft) into any game that hosts the passthrough link (`docs/CONTRACT.md` of rewrite-bridge, v1). It is built on rewrite-bridge 0.4.0, whose link implements revision 7 of the contract, so it can connect to a host that requires a token (`--endpoint-file`, `--token-file`, below).
 
 **Adding a game as a host?** Read the [guide to adding a game](https://github.com/patodois/rewrite-bridge/blob/main/docs/INTEGRATING.md). This program is a real guest: start it against your host with `--in-front` to see a provider's model stand in your world. If your host requires a token (contract section 6.2), pass its endpoint file with `--endpoint-file`; see "A host that requires a token" below.
 
@@ -182,9 +182,9 @@ the guest prints `connected`, and without the token, or with a wrong one, `hands
 
 ## Dependencies
 
-`rewrite-bridge` 0.3.1 (with its `link` feature, which has the token) and `rewrite-bridge-bevy` 0.3.0 from crates.io, Bevy 0.20, and the five providers by git at pinned
-revisions (table above). The providers take `rewrite-bridge` `0.3` (`^0.3.1`) from crates.io too, so `Cargo.lock` holds exactly one copy of it
-(`grep -c 'name = "rewrite-bridge"$' Cargo.lock` prints 1). Before 1.0 a new minor number is a different crate, so a provider revision that still asks for 0.2 does not
+`rewrite-bridge` 0.4.0 (with its `link` feature, which has the token) and `rewrite-bridge-bevy` 0.4.0 from crates.io, Bevy 0.20, and the five providers by git at pinned
+revisions (table above). The providers take `rewrite-bridge` `0.4` from crates.io too, so `Cargo.lock` holds exactly one copy of it
+(`grep -c 'name = "rewrite-bridge"$' Cargo.lock` prints 1). Before 1.0 a new minor number is a different crate, so a provider revision that still asks for 0.3 does not
 build with this one. `wf-unpack` at these revisions no longer uses `oozextract`, so that crate is not in `Cargo.lock` (`cargo tree --locked -i oozextract` finds nothing).
 
 License: MIT OR Apache-2.0.

@@ -1640,7 +1640,7 @@ dependencies = [
  "hytale-unpack",
  "mc-unpack",
  "nocturne-unpack",
- "rewrite-bridge",
+ "rewrite-bridge 0.4.0",
  "rewrite-bridge-bevy",
  "wf-unpack",
  "wt-unpack",
@@ -2527,7 +2527,7 @@ dependencies = [
  "clap",
  "libc",
  "png",
- "rewrite-bridge",
+ "rewrite-bridge 0.3.1",
  "serde",
  "serde_json",
  "zip",
@@ -2900,7 +2900,7 @@ dependencies = [
  "flate2",
  "libc",
  "png",
- "rewrite-bridge",
+ "rewrite-bridge 0.3.1",
  "serde",
  "serde_json",
  "zip",
@@ -3059,7 +3059,7 @@ dependencies = [
  "libc",
  "memmap2",
  "png",
- "rewrite-bridge",
+ "rewrite-bridge 0.3.1",
  "serde",
  "serde_json",
  "unity-bundle",
@@ -3805,6 +3805,12 @@ name = "rewrite-bridge"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8a296e290e63610ff1c5a4ae012666464d3697ac5dfd04acff5681f46c4f37b6"
+
+[[package]]
+name = "rewrite-bridge"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "73b1e463fa808a2b4c25d48c214f0cdc66ff09db3c283009f031534e331b3587"
 dependencies = [
  "getrandom 0.3.4",
  "libc",
@@ -3815,12 +3821,12 @@ dependencies = [
 
 [[package]]
 name = "rewrite-bridge-bevy"
-version = "0.3.0"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "67124298b6531f051185472f8165968ec5cef8f866ad89ee6aa3f0b6493b3f9b"
+checksum = "f005be731748492c294fec3653f58b554a0c9df5002f989feb7e663a84e3c0e1"
 dependencies = [
  "bevy",
- "rewrite-bridge",
+ "rewrite-bridge 0.4.0",
 ]
 
 [[package]]
@@ -4801,7 +4807,7 @@ dependencies = [
  "libc",
  "lztans",
  "png",
- "rewrite-bridge",
+ "rewrite-bridge 0.3.1",
  "serde_json",
  "zstd",
 ]
@@ -5306,7 +5312,7 @@ dependencies = [
  "md-5",
  "memmap2",
  "png",
- "rewrite-bridge",
+ "rewrite-bridge 0.3.1",
  "ruzstd",
  "serde_json",
  "wt-formats",

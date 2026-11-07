@@ -14,6 +14,10 @@ use std::time::{Duration, Instant};
 
 use rewrite_bridge::link::*;
 
+#[path = "common/frame_sink.rs"]
+mod frame_sink;
+use frame_sink::FrameSink;
+
 fn arg<T: std::str::FromStr>(name: &str) -> Option<T> {
     let args: Vec<String> = std::env::args().collect();
     let i = args.iter().position(|a| a == name)?;
@@ -66,8 +70,7 @@ fn main() -> std::io::Result<()> {
         ..LinkConfig::new("probe_host")
     })?;
     println!("listening on {}", link.control_addr().unwrap());
-    let mut reader: Option<FrameReader> = None;
-    let (mut rgba, mut depth) = (Vec::new(), Vec::new());
+    let mut sink = FrameSink::default();
     let mut next_send = Instant::now();
     let mut waiting = false;
     let (mut sent, mut got) = (0u32, 0u32);
@@ -85,19 +88,21 @@ fn main() -> std::io::Result<()> {
                 Event::Connected(p) => println!("connected: {}", p.game),
                 Event::Lost { reason } => {
                     println!("lost: {reason}");
-                    reader = None;
+                    sink.lost();
                 }
-                Event::FrameChannel(c) => reader = FrameReader::open(c.path.as_ref()).ok(),
+                Event::FrameChannel(c) => {
+                    sink.channel(&c);
+                }
                 Event::Frame { frame, .. } => {
                     waiting = false;
-                    if let Some(r) = &reader {
-                        if let Ok(d) = r.read_depth(&frame, &mut rgba, &mut depth) {
+                    {
+                        if let Some(d) = sink.present(&frame) {
                             began_frames.get_or_insert_with(Instant::now);
                             got += 1;
                             total_got += 1;
                             ages.push(now_us().saturating_sub(d.time_us) as f32 / 1000.0);
                             size = (d.width as usize, d.height as usize);
-                            for (px, &t) in rgba.chunks_exact(4).zip(&depth) {
+                            for (px, &t) in sink.rgba.chunks_exact(4).zip(&sink.depth) {
                                 pixels += 1;
                                 if px[3] != 0 {
                                     covered += 1;
@@ -174,8 +179,14 @@ fn main() -> std::io::Result<()> {
         "pixels seen: {covered} covered of {pixels}; with alpha other than 0 or 255: {partial_alpha}; depth {dmin:.3} to {dmax:.3} m"
     );
     if let Some(path) = dump {
-        write_ppm(&path, size.0, size.1, &rgba)?;
-        println!("wrote {path}");
+        if sink.shown().is_some() {
+            write_ppm(&path, size.0, size.1, &sink.rgba)?;
+            println!("wrote {path}");
+        } else {
+            println!(
+                "no frame is shown (none arrived, or the session ended), so {path} was not written"
+            );
+        }
     }
     link.disconnect("probe done");
     for _ in 0..40 {

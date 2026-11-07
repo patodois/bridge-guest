@@ -18,6 +18,10 @@ use std::time::{Duration, Instant};
 
 use rewrite_bridge::link::*;
 
+#[path = "common/frame_sink.rs"]
+mod frame_sink;
+use frame_sink::FrameSink;
+
 fn arg<T: std::str::FromStr>(name: &str) -> Option<T> {
     let args: Vec<String> = std::env::args().collect();
     let i = args.iter().position(|a| a == name)?;
@@ -198,8 +202,7 @@ fn main() -> std::io::Result<()> {
             ..LinkConfig::new("depth_check")
         })?;
         let mut child = start_guest(&guest_path, asset, port)?;
-        let mut reader: Option<FrameReader> = None;
-        let (mut rgba, mut depth) = (Vec::new(), Vec::new());
+        let mut sink = FrameSink::default();
         let deadline_total = Instant::now() + Duration::from_secs(300);
         for case in all.iter().filter(|c| c.asset == asset) {
             let mut seqs: HashMap<u32, ()> = HashMap::new();
@@ -212,14 +215,14 @@ fn main() -> std::io::Result<()> {
                 }
                 for event in link.poll() {
                     match event {
-                        Event::FrameChannel(c) => reader = FrameReader::open(c.path.as_ref()).ok(),
-                        Event::Frame { frame, .. } => {
-                            if let (Some(r), true) = (&reader, seqs.contains_key(&frame.camera_seq))
-                            {
-                                if let Ok(d) = r.read_depth(&frame, &mut rgba, &mut depth) {
-                                    let (w, h) = (d.width as usize, d.height as usize);
-                                    result = Some(compare(case, &depth, &rgba, w, h));
-                                }
+                        Event::FrameChannel(c) => {
+                            sink.channel(&c);
+                        }
+                        Event::Lost { .. } => sink.lost(),
+                        Event::Frame { frame, .. } if seqs.contains_key(&frame.camera_seq) => {
+                            if let Some(d) = sink.present(&frame) {
+                                let (w, h) = (d.width as usize, d.height as usize);
+                                result = Some(compare(case, &sink.depth, &sink.rgba, w, h));
                             }
                         }
                         _ => {}
