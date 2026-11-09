@@ -1,7 +1,6 @@
 # bridge-guest
 
-Puts a model from any [rewrite-bridge](https://github.com/patodois/rewrite-bridge) provider (War Thunder, Warframe, Hytale,
-Nocturne, Minecraft) into any game that hosts the passthrough link (`docs/CONTRACT.md` of rewrite-bridge, v1). It is built on rewrite-bridge 0.4.0, whose link implements revision 7 of the contract, so it can connect to a host that requires a token (`--endpoint-file`, `--token-file`, below).
+bridge-guest renders models from [rewrite-bridge](https://github.com/patodois/rewrite-bridge) providers inside a passthrough host game for developers integrating cross-game assets. It is built on rewrite-bridge 0.4.0, whose link implements revision 7 of the contract, so it can connect to a host that requires a token (`--endpoint-file`, `--token-file`, below).
 
 **Adding a game as a host?** Read the [guide to adding a game](https://github.com/patodois/rewrite-bridge/blob/main/docs/INTEGRATING.md). This program is a real guest: start it against your host with `--in-front` to see a provider's model stand in your world. If your host requires a token (contract section 6.2), pass its endpoint file with `--endpoint-file`; see "A host that requires a token" below.
 

@@ -4,6 +4,8 @@ version = "0.1.0"
 edition = "2021"
 description = "Puts any rewrite-bridge provider's model into any game that hosts the passthrough link, drawn on the GPU with the host's camera and depth-tested against the host's geometry"
 license = "MIT OR Apache-2.0"
+keywords = ["gamedev", "rewrite-bridge", "bevy", "passthrough", "rendering"]
+categories = ["game-development", "rendering"]
 # A local tool: it needs your own game installs to do anything
 publish = false
 
